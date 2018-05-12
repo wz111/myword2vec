@@ -1,11 +1,19 @@
+#coding:utf-8
+##
+ # @Author:		xinzeL
+ # @Version: 	 	1.0
+ # @DateTime:    2018-05-12 18:17:50
+ ##
 import math
-
+import numpy
 from WordFreq import * 
 from HuffmanTree import *
 from sklearn import preprocessing
 
-WORDVEC_LEN = 500
-LEARN_RATE = 0.05
+import gensim, logging
+
+WORDVEC_LEN = 20
+LEARN_RATE = 0.01
 WINDOW_LEN = 5
 MODEL = 'skipGram'
 
@@ -146,7 +154,30 @@ if __name__ == '__main__':
 	wordFreq = WordFreq('austen-emma.txt')
 	w2v = word2vec(vec_len = WORDVEC_LEN, learn_rate = LEARN_RATE, win_len = WINDOW_LEN, model = MODEL)
 	w2v.loadWordFreq(wordFreq)
+	#-----------train segment------------#
+	print('word2vec train start:')
+	print('...')
+	model = gensim.models.Word2Vec(w2v.sents_list, min_count = 5, size = 20)
+	print('word2vec train has already finished')
+	#model.save(r'D:/Study/NLP/myword2vec/word2vecModel')
+	#new_model = gensim.models.Word2Vec.load(r'D:/Study/NLP/myword2vec/word2vecModel')
 	w2v.trainModel()
 
-	standard = np.linalg.norm((w2v.word_dict['man']['vector'] - w2v.word_dict['woman']['vector']) - (w2v.word_dict['gentleman']['vector'] - w2v.word_dict['lady']['vector']))
-	print(standard)
+	#--------print the word vector list------------#
+	#f = open('wordict.txt', 'w+')
+	#for worddic in w2v.word_dict:
+	#	print("{a} vector: {b}".format(a = w2v.word_dict[worddic]['word'], b = w2v.word_dict[worddic]['vector']), file = f)
+
+	#---------test segment---------#
+	#lady -> ladi because of the Porter Stemmer
+	dis = np.linalg.norm((w2v.word_dict['man']['vector'] - w2v.word_dict['gentleman']['vector']) - (w2v.word_dict['woman']['vector'] - w2v.word_dict['ladi']['vector']))
+	print("{c}{d}".format(c = "gentleman-man and lady-woman 's dis:", d = dis))
+
+	print("Word2Vec trained 'man' vector:")
+	print(model['man'])
+	print("my Word2Vec trained 'man' vector:")
+	print(w2v.word_dict['man']['vector'])
+
+	dist = np.linalg.norm(model['man'] - w2v.word_dict['man']['vector']) 
+	print("two vectors' dis:")
+	print(dist)

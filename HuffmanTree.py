@@ -1,3 +1,8 @@
+##
+ # @Author:		xinzeL
+ # @Version: 	 	1.0
+ # @DateTime:    2018-05-12 18:17:57
+ ##
 import numpy as np
 
 class HuffmanTreeNode():

@@ -1,3 +1,8 @@
+##
+ # @Author:		xinzeL
+ # @Version: 	 	1.0
+ # @DateTime:    2018-05-12 18:17:27
+ ##
 import nltk
 from nltk.corpus import gutenberg
 from nltk.corpus import stopwords
